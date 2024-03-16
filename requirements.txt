@@ -1,0 +1,8 @@
+timm
+einops
+ml_collections
+wget
+tensorboardX
+SimpleITK
+medpy
+torch>=2.0.0
