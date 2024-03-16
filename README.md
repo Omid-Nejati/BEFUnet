@@ -15,6 +15,9 @@ Please go to ["Colab_BEFUnet.ipynb"](https://github.com/Omid-Nejati/BEFUnet/blob
 ![images](Figures/model.png)
 
 # Usage
+
+This code has been implemented in python language using Pytorch library and tested in ubuntu OS, though should be compatible with related environment. following Environement and Library needed to run the code: Python 3, Pytorch
+
 ## Installation
 1) Run the following code to install the Requirements.
 
