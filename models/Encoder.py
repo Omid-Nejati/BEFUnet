@@ -130,11 +130,24 @@ class PyramidFeatures(nn.Module):
                      "layers.3.downsample.reduction.weight","norm.weight", "norm.bias"]
 
          
-        pidinet = PiDiNet(30, config_model_converted(config.pdcs), dil=12, sa=True, convert=True)
+        pidinet = PiDiNet(30, config_model(config.pdcs), dil=12, sa=True).eval()
+        
+        #load weights
+        checkpoint_PDC = torch.load(config.PDC_pretrained_path)
+        state_dict = checkpoint_PDC['state_dict']
+        # create new OrderedDict that does not contain `module.`
+        from collections import OrderedDict
+        new_state_dict = OrderedDict()
+        for k, v in state_dict.items():
+            name = k[7:]  # remove `module.`
+            new_state_dict[name] = v
+
+        pidinet.load_state_dict(new_state_dict)
+        
         self.pidinet_layers = nn.ModuleList(pidinet.children())[:17]
 
 
-        self.p1_ch = nn.Conv2d(config.cnn_pyramid_fm[0], config.swin_pyramid_fm[0] , kernel_size = 1)
+        self.p1_ch = nn.Conv2d(config.cnn_pyramid_fm[0], config.swin_pyramid_fm[0] , kernel_size = 1, stride=4)
         self.p1_pm = PatchMerging((config.image_size // config.patch_size, config.image_size // config.patch_size), config.swin_pyramid_fm[0])
         self.p1_pm.state_dict()['reduction.weight'][:]= checkpoint["layers.0.downsample.reduction.weight"]
         self.p1_pm.state_dict()['norm.weight'][:]= checkpoint["layers.0.downsample.norm.weight"]
@@ -143,20 +156,20 @@ class PyramidFeatures(nn.Module):
         self.avgpool_1 = nn.AdaptiveAvgPool1d(1) 
 
 
-        self.p2_ch = nn.Conv2d(config.cnn_pyramid_fm[1], config.swin_pyramid_fm[1] , kernel_size = 1)
+        self.p2_ch = nn.Conv2d(config.cnn_pyramid_fm[1], config.swin_pyramid_fm[1] , kernel_size = 1, stride=4)
         self.p2_pm = PatchMerging((config.image_size // config.patch_size // 2, config.image_size // config.patch_size // 2), config.swin_pyramid_fm[1])
         self.p2_pm.state_dict()['reduction.weight'][:]= checkpoint["layers.1.downsample.reduction.weight"]
         self.p2_pm.state_dict()['norm.weight'][:]= checkpoint["layers.1.downsample.norm.weight"]
         self.p2_pm.state_dict()['norm.bias'][:]= checkpoint["layers.1.downsample.norm.bias"]           
         
 
-        self.p3_ch = nn.Conv2d(config.cnn_pyramid_fm[2] , config.swin_pyramid_fm[2] , kernel_size =  1)
+        self.p3_ch = nn.Conv2d(config.cnn_pyramid_fm[2] , config.swin_pyramid_fm[2] , kernel_size =  1, stride=4)
         self.p3_pm = PatchMerging((config.image_size // config.patch_size // 4, config.image_size // config.patch_size // 4), config.swin_pyramid_fm[2])
         self.p3_pm.state_dict()['reduction.weight'][:] = checkpoint["layers.2.downsample.reduction.weight"]
         self.p3_pm.state_dict()['norm.weight'][:] = checkpoint["layers.2.downsample.norm.weight"]
         self.p3_pm.state_dict()['norm.bias'][:] = checkpoint["layers.2.downsample.norm.bias"]
 
-        self.p4_ch = nn.Conv2d(config.cnn_pyramid_fm[3], config.swin_pyramid_fm[3], kernel_size=1)
+        self.p4_ch = nn.Conv2d(config.cnn_pyramid_fm[3], config.swin_pyramid_fm[3], kernel_size=1, stride=4)
         self.norm_2 = nn.LayerNorm(config.swin_pyramid_fm[3])
         self.avgpool_2 = nn.AdaptiveAvgPool1d(1)    
 
@@ -223,7 +236,7 @@ class PyramidFeatures(nn.Module):
 
         return [torch.cat((sw1_CLS_reshaped, sw1_skipped), dim=1), torch.cat((sw4_CLS_reshaped, fm4_sw4_skipped), dim=1)]
 
-# DLF Module
+# MSF Module
 class All2Cross(nn.Module):
     def __init__(self, config, img_size = 224 , in_chans=3, embed_dim=(96, 768), norm_layer=nn.LayerNorm):
         super().__init__()
