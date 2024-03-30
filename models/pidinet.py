@@ -1,5 +1,4 @@
 
-
 import math
 import numpy as np
 
@@ -149,8 +148,8 @@ class PiDiNet(nn.Module):
             self.init_block = Conv2d(pdcs[0], 3, self.inplane, kernel_size=3, padding=1)
             block_class = PDCBlock
 
-        self.block1_1 = block_class(pdcs[1], self.inplane, self.inplane, stride=2)
-        self.block1_2 = block_class(pdcs[2], self.inplane, self.inplane, stride=2)
+        self.block1_1 = block_class(pdcs[1], self.inplane, self.inplane)
+        self.block1_2 = block_class(pdcs[2], self.inplane, self.inplane)
         self.block1_3 = block_class(pdcs[3], self.inplane, self.inplane)
         self.fuseplanes.append(self.inplane) # C
 
@@ -170,13 +169,11 @@ class PiDiNet(nn.Module):
         self.block3_4 = block_class(pdcs[11], self.inplane, self.inplane)
         self.fuseplanes.append(self.inplane) # 4C
 
-        inplane = self.inplane
-        self.inplane = self.inplane * 2
-        self.block4_1 = block_class(pdcs[12], inplane, self.inplane, stride=2)
+        self.block4_1 = block_class(pdcs[12], self.inplane, self.inplane, stride=2)
         self.block4_2 = block_class(pdcs[13], self.inplane, self.inplane)
         self.block4_3 = block_class(pdcs[14], self.inplane, self.inplane)
         self.block4_4 = block_class(pdcs[15], self.inplane, self.inplane)
-        self.fuseplanes.append(self.inplane) # 8C
+        self.fuseplanes.append(self.inplane) # 4C
 
         self.conv_reduces = nn.ModuleList()
         if self.sa and self.dil is not None:
