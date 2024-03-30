@@ -130,7 +130,7 @@ class PyramidFeatures(nn.Module):
                      "layers.3.downsample.reduction.weight","norm.weight", "norm.bias"]
 
          
-        pidinet = PiDiNet(30, config_model_converted(config.pdcs), dil=None, sa=False, convert=True)
+        pidinet = PiDiNet(30, config_model_converted(config.pdcs), dil=12, sa=True, convert=True)
         self.pidinet_layers = nn.ModuleList(pidinet.children())[:17]
 
 
