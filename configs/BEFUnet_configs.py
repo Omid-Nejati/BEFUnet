@@ -24,9 +24,9 @@ def get_BEFUnet_configs():
     # CNN Configs
     cfg.cnn_backbone = "pidinet_small_converted"
     cfg.pdcs = 'carv4'
-    cfg.cnn_pyramid_fm = [30, 60, 120, 240]
-    # cfg.cnn_pyramid_fm  = [256,512,1024]
+    cfg.cnn_pyramid_fm = [30, 60, 120, 120]
     cfg.pidinet_pretrained = False
+    cfg.PDC_pretrained_path = './weights/table5_pidinet-small.pth'
 
     # DLF Configs
     cfg.depth = [[1, 2, 0]]
