@@ -4,7 +4,7 @@
 
 # :tada: :tada: :tada: News
 
-- **`2024/02/21` First release.**
+- **`2024/03/20` First release.**
 
 
 ## Train & Test --- Synapse Dataset
