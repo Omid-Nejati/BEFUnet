@@ -12,7 +12,7 @@ Please go to ["Colab_BEFUnet.ipynb"](https://github.com/Omid-Nejati/BEFUnet/blob
 
 ## 
 
-![images](Figures/model.png)
+![images](Figures/models.png)
 
 # Usage
 
