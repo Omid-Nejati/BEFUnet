@@ -33,10 +33,7 @@ This code has been implemented in python language using Pytorch library and test
     ```bash
     python test.py --test_path ./data/Synapse/test_vol_h5 --model_name BEFUnet --is_savenii --model_weight 
     ```
-## Query 
-All implementations are done by Omid Nejati Manzari. For any query please contact us for more information.
 
-[*omid.nejaty@gmail.com*](mailto:omid.nejaty@gmail.com)
 
 ## Acknowledgement
 We borrowed the code from [Swin Transformer](https://github.com/microsoft/Swin-Transformer) and [PiDinet](https://github.com/hellozhuo/pidinet). Thanks for their wonderful works.
